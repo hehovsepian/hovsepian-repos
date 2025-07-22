@@ -12,6 +12,7 @@ type ReposContextType = {
   isLoading: boolean;
   error: string | null;
   repoCount: number;
+  hasMore: boolean;
   loadMoreRepos: () => void;
 };
 
@@ -20,6 +21,7 @@ const ReposContext = createContext<ReposContextType>({
   isLoading: true,
   error: null,
   repoCount: 0,
+  hasMore: true,
   loadMoreRepos: () => {},
 });
 
@@ -32,6 +34,7 @@ export default function ReposProvider({ children }: ReposProviderProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const fetchRepos = (pageNumber: number, signal?: AbortSignal) => {
     setIsLoading(true);
@@ -42,6 +45,7 @@ export default function ReposProvider({ children }: ReposProviderProps) {
       .then((results) => results.json())
       .then((data) => {
         setRepos((prev) => [...prev, ...data]);
+        if (data.length < 20) setHasMore(false);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -74,6 +78,7 @@ export default function ReposProvider({ children }: ReposProviderProps) {
         isLoading,
         error,
         repoCount: repos.length,
+        hasMore,
         loadMoreRepos,
       }}
     >

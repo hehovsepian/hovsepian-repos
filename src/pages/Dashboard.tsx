@@ -1,10 +1,26 @@
+import { useRef, useEffect, useState } from "react";
 import RepoCard from "../components/RepoCard";
 import Header from "../components/Header";
 import { useReposContext } from "../store/ReposContext";
 
 function Dashboard() {
-  const { repos, isLoading, error, repoCount, loadMoreRepos } =
+  const { repos, isLoading, error, repoCount, hasMore, loadMoreRepos } =
     useReposContext();
+
+  // Ref for the first newly loaded repo link
+  const newRepoLinkRef = useRef<HTMLAnchorElement>(null);
+  // Track previous repo count
+  const [prevRepoCount, setPrevRepoCount] = useState<number>(0);
+
+  useEffect(() => {
+    if (repos.length > prevRepoCount && newRepoLinkRef.current) {
+      newRepoLinkRef.current.focus();
+    }
+    setPrevRepoCount(repos.length);
+  }, [repos]);
+
+  // Calculate the index of the first new repo
+  const firstNewIndex = prevRepoCount;
 
   if (error) return <p>{error}</p>;
 
@@ -23,19 +39,30 @@ function Dashboard() {
                 <p className="text-center">No repositories found.</p>
               ) : (
                 <>
-                  {repos.map((repo) => {
-                    return <RepoCard key={repo.id} repo={repo} />;
+                  {repos.map((repo, index) => {
+                    // Pass ref to the first new item only
+                    const shouldAttachRef =
+                      index === firstNewIndex && repos.length > prevRepoCount;
+                    return (
+                      <RepoCard
+                        key={repo.id}
+                        repo={repo}
+                        linkRef={shouldAttachRef ? newRepoLinkRef : undefined}
+                      />
+                    );
                   })}
                 </>
               )}
             </ul>
-            <button
-              className="m-auto block my-20"
-              onClick={loadMoreRepos}
-              disabled={isLoading}
-            >
-              {isLoading ? "Loading..." : "Load more repos"}
-            </button>
+            {hasMore ? (
+              <button
+                className="m-auto block my-20"
+                onClick={loadMoreRepos}
+                disabled={isLoading}
+              >
+                {isLoading ? "Loading..." : "Load more repos"}
+              </button>
+            ) : null}
           </>
         )}
       </main>

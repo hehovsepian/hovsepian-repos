@@ -60,7 +60,7 @@ function Detail() {
               ) : (
                 <p>Language: {selectedRepo.language}</p>
               )}
-              {/* this could also be another fetch to get more details */}
+              {/* this could also be another fetch to get more details? */}
               <p>Forks: {selectedRepo.forks}</p>
               <p>Open Issues: {selectedRepo.open_issues}</p>
               <p>Watchers: {selectedRepo.watchers}</p>

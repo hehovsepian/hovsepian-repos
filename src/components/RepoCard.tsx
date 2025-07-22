@@ -1,16 +1,20 @@
+import { type Ref } from "react";
 import { type Repo } from "../types/global_types";
 import { Link } from "react-router-dom";
 
 type RepoCardProps = {
   repo: Repo;
+  linkRef?: Ref<HTMLAnchorElement>;
 };
 
-function RepoCard({ repo }: RepoCardProps) {
+function RepoCard({ repo, linkRef }: RepoCardProps) {
   return (
-    <div className="border p-4 rounded-lg shadow-md w-full">
+    <li className="border p-4 rounded-lg shadow-md w-full">
       <p>{repo.name}</p>
-      <Link to={`/repo/${repo.id}`}>See repo details</Link>
-    </div>
+      <Link to={`/repo/${repo.id}`} ref={linkRef}>
+        See repo details
+      </Link>
+    </li>
   );
 }
 
