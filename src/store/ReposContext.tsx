@@ -11,6 +11,7 @@ type ReposContextType = {
   repos: Repo[];
   isLoading: boolean;
   error: string | null;
+  repoCount: number;
   loadMoreRepos: () => void;
 };
 
@@ -18,6 +19,7 @@ const ReposContext = createContext<ReposContextType>({
   repos: [],
   isLoading: true,
   error: null,
+  repoCount: 0,
   loadMoreRepos: () => {},
 });
 
@@ -66,7 +68,15 @@ export default function ReposProvider({ children }: ReposProviderProps) {
   }, []);
 
   return (
-    <ReposContext.Provider value={{ repos, isLoading, error, loadMoreRepos }}>
+    <ReposContext.Provider
+      value={{
+        repos,
+        isLoading,
+        error,
+        repoCount: repos.length,
+        loadMoreRepos,
+      }}
+    >
       {children}
     </ReposContext.Provider>
   );

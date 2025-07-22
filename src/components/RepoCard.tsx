@@ -7,7 +7,7 @@ type RepoCardProps = {
 
 function RepoCard({ repo }: RepoCardProps) {
   return (
-    <div className="border p-4 rounded-lg shadow-md">
+    <div className="border p-4 rounded-lg shadow-md w-full">
       <p>{repo.name}</p>
       <Link to={`/repo/${repo.id}`}>See repo details</Link>
     </div>

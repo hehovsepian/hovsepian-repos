@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { type Repo } from "../types/global_types";
 import { useParams } from "react-router-dom";
-import { useReposContext } from "../store/repos-context";
+import { useReposContext } from "../store/ReposContext";
 import { Link } from "react-router";
 
 function Detail() {
@@ -16,7 +16,8 @@ function Detail() {
       fetch(selectedRepo.languages_url)
         .then((results) => results.json())
         .then((data) => {
-          setLanguagesList(data);
+          const languages = Object.keys(data);
+          setLanguagesList(languages);
         })
         .catch(() => {
           console.error("Failed to fetch repo languages");
@@ -36,31 +37,42 @@ function Detail() {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <>
-      <Link to={`/`}>Back to all repos</Link>
-      {selectedRepo ? (
-        <>
-          <p>{selectedRepo.name}</p>
-          <p>{selectedRepo.description}</p>
-          <a href={selectedRepo.html_url}>View on Github</a>
-          {languagesList.length > 0 ? (
-            <ul>
-              {languagesList.map((language, index) => (
-                <li key={index}>{language}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>{selectedRepo.language}</p>
-          )}
-          {/* this could also be another fetch to get more details */}
-          <p>Forks: {selectedRepo.forks}</p>
-          <p>Open Issues: {selectedRepo.open_issues}</p>
-          <p>Watchers: {selectedRepo.watchers}</p>
-        </>
-      ) : (
-        <p>Repo not found</p>
-      )}
-    </>
+    <main className="w-screen h-screen p-4 sm:p-20">
+      <div className="flex flex-col w-full sm:w-1/2 gap-4 items-center m-auto">
+        <Link to={`/`}>Back to all repos</Link>
+        {selectedRepo ? (
+          <>
+            <div className="border p-4 rounded-lg shadow-md w-full mt-10">
+              <p>{selectedRepo.name}</p>
+              <p>{selectedRepo.description}</p>
+              <a href={selectedRepo.html_url} target="_blank">
+                View on Github
+              </a>
+            </div>
+            <div className="border p-4 rounded-lg shadow-md w-full mt-4">
+              {languagesList.length > 1 ? (
+                <>
+                  <span>Languages:</span>
+                  <ul>
+                    {languagesList.map((language, index) => (
+                      <li key={index}>{language}</li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p>Language: {selectedRepo.language}</p>
+              )}
+              {/* this could also be another fetch to get more details */}
+              <p>Forks: {selectedRepo.forks}</p>
+              <p>Open Issues: {selectedRepo.open_issues}</p>
+              <p>Watchers: {selectedRepo.watchers}</p>
+            </div>
+          </>
+        ) : (
+          <p>Repo not found</p>
+        )}
+      </div>
+    </main>
   );
 }
 
