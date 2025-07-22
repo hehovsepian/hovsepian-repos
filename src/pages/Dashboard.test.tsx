@@ -25,6 +25,7 @@ describe("Dashboard", () => {
       isLoading: false,
       error: null,
       repoCount: 0,
+      hasMore: true,
       loadMoreRepos: vi.fn(),
     };
     render(<Dashboard />);
@@ -37,6 +38,7 @@ describe("Dashboard", () => {
       isLoading: true,
       error: null,
       repoCount: 0,
+      hasMore: true,
       loadMoreRepos: vi.fn(),
     };
     render(<Dashboard />);
@@ -51,6 +53,7 @@ describe("Dashboard", () => {
       isLoading: false,
       error: null,
       repoCount: mockRepos.length,
+      hasMore: true,
       loadMoreRepos: vi.fn(),
     };
     render(<Dashboard />);
@@ -64,9 +67,13 @@ describe("Dashboard", () => {
       isLoading: false,
       error: "Failed to fetch repos",
       repoCount: 0,
+      hasMore: true,
       loadMoreRepos: vi.fn(),
     };
     render(<Dashboard />);
     expect(screen.getByText("Failed to fetch repos")).toBeInTheDocument();
   });
+
+  // if more time I would've written a unit test for the hasMore functionality
+  // this just ensures that the button is only rendered when more repos are available to load from the api
 });

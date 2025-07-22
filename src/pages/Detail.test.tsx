@@ -22,6 +22,7 @@ describe("Detail Page", () => {
       isLoading: false,
       error: null,
       repoCount: 0,
+      hasMore: true,
       loadMoreRepos: vi.fn(),
     };
     render(
@@ -40,6 +41,7 @@ describe("Detail Page", () => {
       isLoading: false,
       error: null,
       repoCount: 1,
+      hasMore: true,
       loadMoreRepos: vi.fn(),
     };
     render(
