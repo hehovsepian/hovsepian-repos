@@ -24,7 +24,7 @@ This app has limited interactivity but I tried to follow some a11y best practice
 1. Use concise and meaningful text for links
 2. Do not capitalize all letters in links
 3. Avoid using URLs for link text
-I also did some quick keyboard tabbing to test the kayboard accessibility...I found that when new repos were loaded using the "Load more repos" button the tab focus would return to the top of the page. I added some functionality to auto focus on the next new repo that was loaded so that keyboard users can continue tabbing down the list without interuption. 
+I also did some quick keyboard tabbing to test the keyboard accessibility...I found that when new repos were loaded using the "Load more repos" button the tab focus would return to the top of the page. I added some functionality to auto focus on the next new repo that was loaded so that keyboard users can continue tabbing down the list without interuption. 
 
 ## Future Improvements
 With more time I would 
