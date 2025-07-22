@@ -3,7 +3,8 @@ import Header from "../components/Header";
 import { useReposContext } from "../store/ReposContext";
 
 function Dashboard() {
-  const { repos, isLoading, error, loadMoreRepos } = useReposContext();
+  const { repos, isLoading, error, repoCount, loadMoreRepos } =
+    useReposContext();
 
   if (error) return <p>{error}</p>;
 
@@ -12,9 +13,15 @@ function Dashboard() {
       <Header />
       <main>
         <ul className="flex flex-col w-full sm:w-1/2 p-4 sm:p-0 gap-4 items-center m-auto">
-          {repos.map((repo) => {
-            return <RepoCard key={repo.id} repo={repo} />;
-          })}
+          {repoCount === 0 && !isLoading ? (
+            <p className="text-center">No repositories found.</p>
+          ) : (
+            <>
+              {repos.map((repo) => {
+                return <RepoCard key={repo.id} repo={repo} />;
+              })}
+            </>
+          )}
         </ul>
         <button
           className="m-auto block my-20"

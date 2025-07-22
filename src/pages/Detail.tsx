@@ -54,8 +54,8 @@ function Detail() {
                 <>
                   <span>Languages:</span>
                   <ul>
-                    {languagesList.map((language, index) => (
-                      <li key={index}>{language}</li>
+                    {languagesList.map((language) => (
+                      <li key={language}>{language}</li>
                     ))}
                   </ul>
                 </>
