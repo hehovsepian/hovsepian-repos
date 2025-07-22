@@ -1,24 +1,18 @@
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import Detail from "./pages/Detail";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ReposProvider from "./store/ReposContext";
 
 function App() {
   return (
     <ReposProvider>
-      <RouterProvider
-        router={createBrowserRouter([
-          {
-            path: "/",
-            element: <Dashboard />,
-          },
-          {
-            path: "/repo/:id",
-            element: <Detail />,
-          },
-        ])}
-      />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/repo/:id" element={<Detail />} />
+        </Routes>
+      </BrowserRouter>
     </ReposProvider>
   );
 }

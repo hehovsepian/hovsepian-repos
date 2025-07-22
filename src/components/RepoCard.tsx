@@ -1,5 +1,5 @@
 import { type Repo } from "../types/global_types";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 type RepoCardProps = {
   repo: Repo;

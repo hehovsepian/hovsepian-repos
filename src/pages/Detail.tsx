@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { type Repo } from "../types/global_types";
 import { useParams } from "react-router-dom";
 import { useReposContext } from "../store/ReposContext";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 function Detail() {
   const { id } = useParams<{ id: string }>();
-  const { repos, isLoading } = useReposContext();
+  const { repos } = useReposContext();
 
   const [selectedRepo, setSelectedRepo] = useState<Repo | undefined>(undefined);
   const [languagesList, setLanguagesList] = useState<string[]>([]);
@@ -33,8 +33,6 @@ function Detail() {
   useEffect(() => {
     getRepoLanguages();
   }, [selectedRepo]);
-
-  if (isLoading) return <p>Loading...</p>;
 
   return (
     <main className="w-screen h-screen p-4 sm:p-20">
