@@ -11,14 +11,14 @@ type ReposContextType = {
   repos: Repo[];
   isLoading: boolean;
   error: string | null;
-  //   setRepos: (repos: Repo[]) => void;
+  loadMoreRepos: () => void;
 };
 
 const ReposContext = createContext<ReposContextType>({
   repos: [],
   isLoading: true,
   error: null,
-  //   setRepos: (repos: Repo[]) => {},
+  loadMoreRepos: () => {},
 });
 
 type ReposProviderProps = {
@@ -29,29 +29,44 @@ export default function ReposProvider({ children }: ReposProviderProps) {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState<number>(1);
 
-  useEffect(() => {
-    fetch("https://api.github.com/orgs/godaddy/repos?per_page=20")
+  const fetchRepos = (pageNumber: number, signal?: AbortSignal) => {
+    setIsLoading(true);
+    fetch(
+      `https://api.github.com/orgs/godaddy/repos?per_page=20&page=${pageNumber}`,
+      { signal: signal }
+    )
       .then((results) => results.json())
       .then((data) => {
-        setRepos(data);
+        setRepos((prev) => [...prev, ...data]);
         setIsLoading(false);
       })
-      .catch(() => {
-        setError("Failed to fetch repos");
-        setIsLoading(false);
+      .catch((error) => {
+        if (error.name !== "AbortError") {
+          setError("Failed to fetch repos");
+          setIsLoading(false);
+        }
       });
+  };
+
+  const loadMoreRepos = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchRepos(nextPage);
+  };
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchRepos(1, controller.signal);
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
-  //   const context = {
-  //     repos: [],
-  //     setRepos: (repos: Repo[]) => {
-  //       //...
-  //     },
-  //   };
-
   return (
-    <ReposContext.Provider value={{ repos, isLoading, error }}>
+    <ReposContext.Provider value={{ repos, isLoading, error, loadMoreRepos }}>
       {children}
     </ReposContext.Provider>
   );

@@ -8,12 +8,32 @@ function Detail() {
   const { id } = useParams<{ id: string }>();
   const { repos, isLoading } = useReposContext();
 
-  if (isLoading) return <p>Loading...</p>;
+  const [selectedRepo, setSelectedRepo] = useState<Repo | undefined>(undefined);
+  const [languagesList, setLanguagesList] = useState<string[]>([]);
 
-  const selectedRepo: Repo | undefined = repos.find(
-    (repo) => repo.id === Number(id)
-  );
-  console.log(selectedRepo);
+  const getRepoLanguages = () => {
+    if (typeof selectedRepo !== "undefined" && selectedRepo.languages_url) {
+      fetch(selectedRepo.languages_url)
+        .then((results) => results.json())
+        .then((data) => {
+          setLanguagesList(data);
+        })
+        .catch(() => {
+          console.error("Failed to fetch repo languages");
+        });
+    }
+  };
+
+  useEffect(() => {
+    const repo = repos.find((repo) => repo.id === Number(id));
+    setSelectedRepo(repo);
+  }, [id, repos]);
+
+  useEffect(() => {
+    getRepoLanguages();
+  }, [selectedRepo]);
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
@@ -23,8 +43,15 @@ function Detail() {
           <p>{selectedRepo.name}</p>
           <p>{selectedRepo.description}</p>
           <a href={selectedRepo.html_url}>View on Github</a>
-          {/* this is a new fetch */}
-          <p>{selectedRepo.languages_url}</p>
+          {languagesList.length > 0 ? (
+            <ul>
+              {languagesList.map((language, index) => (
+                <li key={index}>{language}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>{selectedRepo.language}</p>
+          )}
           {/* this could also be another fetch to get more details */}
           <p>Forks: {selectedRepo.forks}</p>
           <p>Open Issues: {selectedRepo.open_issues}</p>
